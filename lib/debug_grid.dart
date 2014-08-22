@@ -45,15 +45,16 @@ class DebugGridElement extends PolymerElement {
   @published int lineHeight = 24;
 
 
-  @observable double get gutterWidthPercentage => 100 * gutterWidth / totalWidth;
 
-  @observable int get columnWidth => ((totalWidth - (gutterWidth * (columns - 1))) / columns).round();
+  @ComputedProperty('100 * gutterWidth / totalWidth')
+  @observable double get gutterWidthPercentage => readValue(#gutterWidthPercentage);
 
-  @observable double get columnWidthPercentage => 100 * columnWidth / totalWidth;
+  @ComputedProperty('((totalWidth - (gutterWidth * (columns - 1))) / columns).round()')
+  @observable int get columnWidth => readValue(#columnWidth);
 
+  @ComputedProperty('100 * columnWidth / totalWidth')
+  @observable double get columnWidthPercentage => readValue(#columnWidthPercentage);
 
-
-  @observable String color = "red";
 
   /// The number of columns to display
   @published int columns = 6;
@@ -107,11 +108,6 @@ class DebugGridElement extends PolymerElement {
    */
   columnsChanged() {
     shadowRoot.querySelector("#columns > div").setInnerHtml(_getDivs(columns));
-
-    // TODO: find a better way to notify those property changes!
-    notifyPropertyChange(new Symbol('columnWidth'), 0, columnWidth);
-    notifyPropertyChange(new Symbol('columnWidthPercentage'), 0, columnWidthPercentage);
-    notifyPropertyChange(new Symbol('gutterWidthPercentage'), 0, gutterWidthPercentage);
   }
 
 

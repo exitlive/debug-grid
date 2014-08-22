@@ -57,8 +57,7 @@ Here is a fully configured debug grid:
             showLines="true"
             visible="true"
             toggleKey="83"
-            linesToggleKey="86"
-            ></debug-grid>
+            linesToggleKey="86"></debug-grid>
 ```
 
 This would display a `1128px` wide grid with `24px` wide gutters, `24px` line
@@ -66,5 +65,5 @@ height and 3 columns.
 By default it is visible and would not show columns, but only lines (which can be toggled
 with the appropriate keys).
 
-The visibility toggle key has been remapped to `83` (== `s`) and the lines
-toggle key has been remapped to `86` (== `v`).
+The visibility toggle key has been remapped to `83` (`s`) and the lines
+toggle key has been remapped to `86` (`v`).

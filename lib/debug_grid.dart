@@ -14,7 +14,7 @@ class DebugGridElement extends PolymerElement {
 
   /// The key that toggles the visibility of the grid.
   /// Use Shift together with it to toggle between 6 and 12 columns
-  @published  int toggleKey = KeyCode.G;
+  @published int toggleKey = KeyCode.G;
 
   /// The key that toggles the visibility of the lines.
   /// Use Shift together with this key to toggle the grid instead.

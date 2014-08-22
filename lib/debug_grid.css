@@ -9,10 +9,14 @@
   width: 100%;
 }
 
+#container:not(.visible) {
+  display: none;
+}
+
 /**
- * The #debug-grid spans the whole page.
+ * The #columns spans the whole page.
  */
-#debug-grid {
+#columns {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,38 +27,36 @@
   overflow: hidden;
 }
 
-#debug-grid:not(.visible),
+#columns:not(.visible),
 #lines:not(.visible) {
   display: none;
 }
 
-#debug-grid > div {
+#columns > div {
   *zoom: 1;
   width: auto;
-  max-width: 1176px;
+  /* max-width will be set by the component itself */
   float: none;
   display: block;
   margin-right: auto;
   margin-left: auto;
-  padding-left: 24px;
-  padding-right: 24px;
   position: relative;
 }
 
-#debug-grid div:before,
-#debug-grid div:after {
+#columns div:before,
+#columns div:after {
   content: '';
   display: table;
 }
 
-#debug-grid div:after {
+#columns div:after {
   clear: both;
 }
 
 /**
  * Style of the grid
  */
-#debug-grid > div > div {
+#columns > div > div {
   height: 5000px;
   background: rgba(150, 255, 150, 0.1);
   border-left: 1px solid rgba(0, 100, 0, 0.15);
@@ -68,7 +70,7 @@
  */
 
 
-#debug-grid > div > div {
+#columns > div > div {
   *zoom: 1;
   float: left;
   display: inline;
@@ -77,42 +79,15 @@
   padding-left: 0;
   padding-right: 0;
   margin-left: 0%;
-  margin-right: 2.12766%;
+  /* margin-right will be set by the component itself */
 }
 
- 
- 
-/**
- * 6 columns
- */
-#debug-grid:not(.cols12) > div > div {
-  /* 168px */
-  width: 14.89361702%;
-}
-#debug-grid:not(.cols12) > div > div:nth-child(6n) {
+#columns > div > div:last-child {
   margin-right: 0%;
   float: right;
 }
-#debug-grid:not(.cols12) > div > div:nth-child(6n + 1) {
-  clear: both;
-}
 
-/**
- * 12 columns
- */
-#debug-grid.cols12 > div > div {
-  /* 72px */
-  width: 6.382978723%;
-}
-#debug-grid.cols12 > div > div:nth-child(12n) {
-  margin-right: 0%;
-  float: right;
-}
-#debug-grid.cols12 > div > div:nth-child(12n + 1) {
-  clear: both;
-}
-
-
+ 
 
 
 
@@ -132,6 +107,5 @@
 #lines > div {
   display: block;
   background: rgba(150, 255, 150, 0.1);
-  height: 24px;
-  margin-top: 24px;
+  /* height and margin are set by the component itself */
 }

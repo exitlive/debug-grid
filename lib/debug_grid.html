@@ -3,16 +3,33 @@
 <polymer-element name="debug-grid">
 
   <template>
-    <div id="debug-grid" class="{{ { 'visible': visible, 'cols12': cols12 } }}"><div>
+  
+    <style>
+      #columns > div {
+        max-width: {{ totalWidth }}px;
+      }
+      #columns > div > div {
+        margin-right: {{ gutterWidthPercentage }}%;
+        width: {{ columnWidthPercentage }}%;
+      }
+      #lines > div {
+        height: {{ lineHeight }}px;
+        margin-top: {{ lineHeight }}px;
+      }
+    </style>
+  
+    <div id="container" class="{{ { 'visible': visible } }}">
+  
+      <div id="columns" class="{{ { 'visible': showColumns } }}"><div>
+        <!-- Will get populated by the 'columnsChanged' method -->
+      </div></div>
+      
+      
+      <div id="lines" class="{{ { 'visible': showLines } }}">
+        <!-- Will get populated by the 'attached' method -->
+      </div>
 
-      <div></div><div></div><div></div><div></div><div></div><div></div>
-
-      <!-- In case of 12 columns -->
-      <div></div><div></div><div></div><div></div><div></div><div></div>
-
-    </div></div>
-    
-    <div id="lines" class="{{ { 'visible': visible } }}"></div>
+    </div>
     
     <link href="debug_grid.css" rel="stylesheet" type="text/css">
 

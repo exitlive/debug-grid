@@ -10,6 +10,8 @@ Protips:
 - press `Shift - l` to toggle the visibility of columns only
 
 
+![Example](http://i.imgur.com/fto0pkX.png)
+
 
 ## Dependency
 
@@ -36,7 +38,7 @@ and put this at the end of your `body` tag:
 <debug-grid></debug-grid>
 ```
 
-That's it, your good to go!
+That's it, you're good to go!
 
 
 > I'm assuming you have already a project setup with polymer! If not, please
@@ -67,7 +69,6 @@ with the appropriate keys).
 
 The visibility toggle key has been remapped to `83` (`s`) and the lines
 toggle key has been remapped to `86` (`v`).
-
 
 ## License
 

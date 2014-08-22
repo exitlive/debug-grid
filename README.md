@@ -10,6 +10,8 @@ Protips:
 - press `Shift - l` to toggle the visibility of columns only
 
 
+![Example](http://i.imgur.com/fto0pkX.png)
+
 
 ## Dependency
 

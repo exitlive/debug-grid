@@ -3,115 +3,6 @@
 <polymer-element name="debug-grid">
 
   <template>
-    <style>
-    
-      *, *:before, *:after {
-        box-sizing: border-box;
-      }
-
-      /**
-       * The #debug-grid container spans the whole page.
-       */
-      #debug-grid {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        z-index: 10000;
-        overflow: hidden;
-      }
-
-      #debug-grid:not(.visible) {
-        display: none;
-      }
-
-      #debug-grid > div {
-        *zoom: 1;
-        width: auto;
-        max-width: 1176px;
-        float: none;
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        padding-left: 24px;
-        padding-right: 24px;
-        position: relative;
-      }
-
-      #debug-grid div:before,
-      #debug-grid div:after {
-        content: '';
-        display: table;
-      }
-
-      #debug-grid div:after {
-        clear: both;
-      }
-      
-      /**
-       * Style of the grid
-       */
-      #debug-grid > div > div {
-        height: 5000px;
-        background: rgba(150, 255, 150, 0.1);
-        border-left: 1px solid rgba(0, 100, 0, 0.15);
-        border-right: 1px solid rgba(0, 100, 0, 0.15);
-      }
-
-
-
-      /**
-       * The actual columns
-       */
-      
-      
-      #debug-grid > div > div {
-        *zoom: 1;
-        float: left;
-        display: inline;
-        clear: none;
-        text-align: inherit;
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: 0%;
-        margin-right: 3%;
-      }
-      
-       
-       
-      /**
-       * 6 columns
-       */
-      #debug-grid:not(.cols12) > div > div {
-        width: 14.16667%;
-      }
-      #debug-grid:not(.cols12) > div > div:nth-child(6n) {
-        margin-right: 0%;
-        float: right;
-      }
-      #debug-grid:not(.cols12) > div > div:nth-child(6n + 1) {
-        clear: both;
-      }
-
-      /**
-       * 12 columns
-       */
-      #debug-grid.cols12 > div > div {
-        width: 5.58333%;
-      }
-      #debug-grid.cols12 > div > div:nth-child(12n) {
-        margin-right: 0%;
-        float: right;
-      }
-      #debug-grid.cols12 > div > div:nth-child(12n + 1) {
-        clear: both;
-      }
-
-    </style>
-
-
     <div id="debug-grid" class="{{ { 'visible': visible, 'cols12': cols12 } }}"><div>
 
       <div></div><div></div><div></div><div></div><div></div><div></div>
@@ -120,6 +11,10 @@
       <div></div><div></div><div></div><div></div><div></div><div></div>
 
     </div></div>
+    
+    <div id="lines" class="{{ { 'visible': visible } }}"></div>
+    
+    <link href="debug_grid.css" rel="stylesheet" type="text/css">
 
   </template>
 

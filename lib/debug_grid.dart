@@ -19,6 +19,9 @@ class DebugGridElement extends PolymerElement {
 
   @published bool visible = false;
 
+
+  @published bool showLines = true;
+
   /// Whether to show 12 columns or just 6
   @published bool cols12 = false;
 
@@ -37,6 +40,18 @@ class DebugGridElement extends PolymerElement {
         }
       }
     });
+  }
+
+  /**
+   * Adds all elements needed to show the lines
+   */
+  attached() {
+    var numberOfLines = 100,
+        linesHtml = '';
+    for (var i = 0; i < numberOfLines; i++) {
+      linesHtml += '<div></div>';
+    }
+    shadowRoot.querySelector('#lines').appendHtml(linesHtml);
   }
 
 

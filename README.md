@@ -67,3 +67,8 @@ with the appropriate keys).
 
 The visibility toggle key has been remapped to `83` (`s`) and the lines
 toggle key has been remapped to `86` (`v`).
+
+
+## License
+
+MIT License

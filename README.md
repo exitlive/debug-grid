@@ -38,7 +38,7 @@ and put this at the end of your `body` tag:
 <debug-grid></debug-grid>
 ```
 
-That's it, your good to go!
+That's it, you're good to go!
 
 
 > I'm assuming you have already a project setup with polymer! If not, please

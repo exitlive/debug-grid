@@ -1,7 +1,7 @@
 import 'dart:html';
 
 import 'package:polymer/polymer.dart';
-
+import 'package:cookie/cookie.dart' as cookie;
 
 /**
  * Displays a debug grid to verify if all elements are properly aligned.
@@ -25,14 +25,24 @@ class DebugGridElement extends PolymerElement {
   /// Can be toggled with [toggleKey]
   @published bool visible = false;
 
+  /// The cookie name
+  static const String VISIBLE_NAME = 'debug-grid-visible';
+
 
   /// Whether to display debug lines
   /// Can be toggled with [linesToggleKey]
   @published bool showLines = false;
 
+  /// The cookie name
+  static const String SHOW_LINES_NAME = 'debug-grid-show-lines';
+
+
   /// Whether to display debug columns.
   /// Can be toggled with Shift - [linesToggleKey]
   @published bool showColumns = true;
+
+  /// The cookie name
+  static const String SHOW_COLUMNS_NAME = 'debug-grid-show-columns';
 
 
   /// The total width in pixels (without gutters on the outside)
@@ -59,6 +69,11 @@ class DebugGridElement extends PolymerElement {
   /// The number of columns to display
   @published int columns = 6;
 
+  /// The cookie name
+  static const String COLUMNS_NAME = 'debug-grid-columns';
+
+
+
   DebugGridElement.created() : super.created();
 
   /**
@@ -77,6 +92,22 @@ class DebugGridElement extends PolymerElement {
         }
       }
     });
+
+
+    String setting;
+
+    setting = cookie.get(VISIBLE_NAME);
+    if (setting != null) visible = (setting == '1');
+
+    setting = cookie.get(SHOW_LINES_NAME);
+    if (setting != null) showLines = (setting == '1');
+
+    setting = cookie.get(SHOW_COLUMNS_NAME);
+    if (setting != null) showColumns = (setting == '1');
+
+    setting = cookie.get(COLUMNS_NAME);
+    if (setting != null) columns = int.parse(setting);
+
   }
 
 
@@ -108,7 +139,24 @@ class DebugGridElement extends PolymerElement {
    */
   columnsChanged() {
     shadowRoot.querySelector("#columns > div").setInnerHtml(_getDivs(columns));
+    cookie.set(COLUMNS_NAME, columns.toString());
   }
+
+  /**
+   * Sets the setting with a cookie
+   */
+  showColumnsChanged() => cookie.set(SHOW_COLUMNS_NAME, showColumns ? '1' : '0');
+
+  /**
+   * Sets the setting with a cookie
+   */
+  visibleChanged() => cookie.set(VISIBLE_NAME, visible ? '1' : '0');
+
+  /**
+   * Sets the setting with a cookie
+   */
+  showLinesChanged() => cookie.set(SHOW_LINES_NAME, showLines ? '1' : '0');
+
 
 
   toggleVisibility() {

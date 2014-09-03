@@ -3,10 +3,27 @@
 <polymer-element name="debug-grid">
 
   <template>
-  
+
+    <template if="{{ adaptive == true }}">
+      <style>
+        #columns > div {
+          width: auto;
+          max-width: {{ totalWidth + gutterWidth * 2 }}px;
+        }
+      </style>
+    </template>
+    <template if="{{ adaptive == false }}">
+      <style>
+        #columns > div {
+          width: {{ totalWidth + gutterWidth * 2 }}px;
+        }
+      </style>
+    </template>
+
     <style>
       #columns > div {
-        max-width: {{ totalWidth }}px;
+        padding-left: {{ gutterWidth }}px;
+        padding-right: {{ gutterWidth }}px;
       }
       #columns > div > div {
         margin-right: {{ gutterWidthPercentage }}%;
@@ -17,20 +34,20 @@
         margin-top: {{ lineHeight }}px;
       }
     </style>
-  
+
     <div id="container" class="{{ { 'visible': visible } }}">
-  
+
       <div id="columns" class="{{ { 'visible': showColumns } }}"><div>
         <!-- Will get populated by the 'columnsChanged' method -->
       </div></div>
-      
-      
+
+
       <div id="lines" class="{{ { 'visible': showLines } }}">
         <!-- Will get populated by the 'attached' method -->
       </div>
 
     </div>
-    
+
     <link href="debug_grid.css" rel="stylesheet" type="text/css">
 
   </template>

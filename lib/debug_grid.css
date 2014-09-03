@@ -6,6 +6,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
   pointer-events: none;
 }
@@ -21,7 +22,7 @@
  * The #columns spans the whole page.
  */
 #columns {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -38,7 +39,6 @@
 
 #columns > div {
   *zoom: 1;
-  width: auto;
   /* max-width will be set by the component itself */
   float: none;
   display: block;
@@ -91,7 +91,7 @@
   float: right;
 }
 
- 
+
 
 
 

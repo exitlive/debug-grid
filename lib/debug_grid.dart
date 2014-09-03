@@ -12,6 +12,12 @@ import 'package:cookie/cookie.dart' as cookie;
 @CustomTag('debug-grid')
 class DebugGridElement extends PolymerElement {
 
+  /// This is used to create the names for cookies
+  /// If you have multiple debug grids, you should use different
+  /// names here
+  @published String name = 'debug-grid';
+
+
   /// The key that toggles the visibility of the grid.
   /// Use Shift together with it to toggle between 6 and 12 columns
   @published int toggleKey = KeyCode.G;
@@ -25,24 +31,15 @@ class DebugGridElement extends PolymerElement {
   /// Can be toggled with [toggleKey]
   @published bool visible = false;
 
-  /// The cookie name
-  static const String VISIBLE_NAME = 'debug-grid-visible';
-
 
   /// Whether to display debug lines
   /// Can be toggled with [linesToggleKey]
   @published bool showLines = false;
 
-  /// The cookie name
-  static const String SHOW_LINES_NAME = 'debug-grid-show-lines';
-
 
   /// Whether to display debug columns.
   /// Can be toggled with Shift - [linesToggleKey]
   @published bool showColumns = true;
-
-  /// The cookie name
-  static const String SHOW_COLUMNS_NAME = 'debug-grid-show-columns';
 
 
   /// The total width in pixels (without gutters on the outside)
@@ -54,6 +51,9 @@ class DebugGridElement extends PolymerElement {
   /// The line height in pixels
   @published int lineHeight = 24;
 
+
+  /// Whether the grid should get smaller if the window size gets smaller
+  @published bool adaptive = true;
 
 
   @ComputedProperty('100 * gutterWidth / totalWidth')
@@ -96,18 +96,17 @@ class DebugGridElement extends PolymerElement {
 
     String setting;
 
-    setting = cookie.get(VISIBLE_NAME);
+    setting = cookie.get('${name}-visible');
     if (setting != null) visible = (setting == '1');
 
-    setting = cookie.get(SHOW_LINES_NAME);
+    setting = cookie.get('${name}-show-lines');
     if (setting != null) showLines = (setting == '1');
 
-    setting = cookie.get(SHOW_COLUMNS_NAME);
+    setting = cookie.get('${name}-show-columns');
     if (setting != null) showColumns = (setting == '1');
 
-    setting = cookie.get(COLUMNS_NAME);
+    setting = cookie.get('${name}-columns');
     if (setting != null) columns = int.parse(setting);
-
   }
 
 
@@ -129,7 +128,7 @@ class DebugGridElement extends PolymerElement {
   attached() {
     var numberOfLines = 100;
     shadowRoot.querySelector('#lines').setInnerHtml(_getDivs(numberOfLines));
-    columnsChanged();
+    _setColumnsHtml();
   }
 
 
@@ -138,28 +137,36 @@ class DebugGridElement extends PolymerElement {
    * of columns are displayed
    */
   columnsChanged() {
+    _setColumnsHtml();
+    cookie.set('${name}-columns', columns.toString());
+  }
+
+  /**
+   * Gets invoked by [columnsChanged] and adds the actual amount of columns
+   */
+  _setColumnsHtml() {
     shadowRoot.querySelector("#columns > div").setInnerHtml(_getDivs(columns));
-    cookie.set(COLUMNS_NAME, columns.toString());
   }
 
   /**
    * Sets the setting with a cookie
    */
-  showColumnsChanged() => cookie.set(SHOW_COLUMNS_NAME, showColumns ? '1' : '0');
+  showColumnsChanged() => cookie.set('${name}-show-columns', showColumns ? '1' : '0');
 
   /**
    * Sets the setting with a cookie
    */
-  visibleChanged() => cookie.set(VISIBLE_NAME, visible ? '1' : '0');
+  visibleChanged() => cookie.set('${name}-visible', visible ? '1' : '0');
 
   /**
    * Sets the setting with a cookie
    */
-  showLinesChanged() => cookie.set(SHOW_LINES_NAME, showLines ? '1' : '0');
+  showLinesChanged() => cookie.set('${name}-show-lines', showLines ? '1' : '0');
 
 
 
   toggleVisibility() {
+    print(name);
     visible = !visible;
   }
 

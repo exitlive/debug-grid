@@ -4,7 +4,7 @@ author: Matias Meno <m@tias.me>
 homepage: https://github.com/exitlive/debug-grid
 version: "0.2.2"
 dependencies:
-    polymer: ">=0.12.0 <0.16.0"
+    polymer: ">=0.12.0 <0.18.0"
     cookie: ">=0.0.4 <0.1.0"
 transformers:
 - polymer:

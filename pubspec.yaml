@@ -2,7 +2,7 @@ name: debug_grid
 description: A simple debug grid polymer element
 author: Matias Meno <m@tias.me>
 homepage: https://github.com/exitlive/debug-grid
-version: "0.2.2"
+version: "0.2.3"
 dependencies:
     polymer: ">=0.12.0 <0.18.0"
     cookie: ">=0.0.4 <0.1.0"

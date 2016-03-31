@@ -1,39 +1,153 @@
-<link rel="import" href="../../packages/polymer/polymer.html">
-
-<polymer-element name="debug-grid">
+<dom-module id="debug-grid">
 
   <template>
-
-    <template if="{{ adaptive == true }}">
-      <style>
-        #columns > div {
-          width: auto;
-          max-width: {{ totalWidth + gutterWidth * 2 }}px;
-        }
-      </style>
-    </template>
-    <template if="{{ adaptive == false }}">
-      <style>
-        #columns > div {
-          width: {{ totalWidth + gutterWidth * 2 }}px;
-        }
-      </style>
-    </template>
-
     <style>
-      #columns > div {
-        padding-left: {{ gutterWidth }}px;
-        padding-right: {{ gutterWidth }}px;
+      *, *:before, *:after {
+        box-sizing: border-box;
       }
+
+      :host {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      #container {
+        pointer-events: none;
+      }
+      #container:not(.visible) {
+        display: none;
+      }
+
+      /**
+       * The #columns spans the whole page.
+       */
+      #columns {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 10000;
+        overflow: hidden;
+      }
+
+      #columns:not(.visible),
+      #lines:not(.visible) {
+        display: none;
+      }
+
+      #columns > div {
+        *zoom: 1;
+        /* max-width will be set by the component itself */
+        float: none;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        position: relative;
+      }
+
+      #columns div:before,
+      #columns div:after {
+        content: '';
+        display: table;
+      }
+
+      #columns div:after {
+        clear: both;
+      }
+
+      /**
+       * Style of the grid
+       */
       #columns > div > div {
-        margin-right: {{ gutterWidthPercentage }}%;
-        width: {{ columnWidthPercentage }}%;
+        height: 5000px;
+        background: rgba(150, 255, 150, 0.1);
+        border-left: 1px solid rgba(0, 100, 0, 0.15);
+        border-right: 1px solid rgba(0, 100, 0, 0.15);
+      }
+
+
+
+      /**
+       * The actual columns
+       */
+
+
+      #columns > div > div {
+        *zoom: 1;
+        float: left;
+        display: inline;
+        clear: none;
+        text-align: inherit;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0%;
+        /* margin-right will be set by the component itself */
+      }
+
+      #columns > div > div:last-child {
+        margin-right: 0%;
+        float: right;
+      }
+
+
+
+
+
+      /**
+       * Lines
+       */
+      #lines {
+        display: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 10000;
+        overflow: hidden;
       }
       #lines > div {
-        height: {{ lineHeight }}px;
-        margin-top: {{ lineHeight }}px;
+        display: block;
+        background: rgba(150, 255, 150, 0.1);
+        /* height and margin are set by the component itself */
       }
     </style>
+    <!--<template if="{{ adaptive == true }}">-->
+      <!--<style>-->
+        <!--#columns > div {-->
+          <!--width: auto;-->
+          <!--max-width: {{ totalWidth + gutterWidth * 2 }}px;-->
+        <!--}-->
+      <!--</style>-->
+    <!--</template>-->
+    <!--<template if="{{ adaptive == false }}">-->
+      <!--<style>-->
+        <!--#columns > div {-->
+          <!--width: {{ totalWidth + gutterWidth * 2 }}px;-->
+        <!--}-->
+      <!--</style>-->
+    <!--</template>-->
+
+    <!--<style>-->
+      <!--#columns > div {-->
+        <!--padding-left: {{ gutterWidth }}px;-->
+        <!--padding-right: {{ gutterWidth }}px;-->
+      <!--}-->
+      <!--#columns > div > div {-->
+        <!--margin-right: {{ gutterWidthPercentage }}%;-->
+        <!--width: {{ columnWidthPercentage }}%;-->
+      <!--}-->
+      <!--#lines > div {-->
+        <!--height: {{ lineHeight }}px;-->
+        <!--margin-top: {{ lineHeight }}px;-->
+      <!--}-->
+    <!--</style>-->
 
     <div id="container" class="{{ { 'visible': visible } }}">
 
@@ -48,11 +162,7 @@
 
     </div>
 
-    <link href="debug_grid.css" rel="stylesheet" type="text/css">
-
   </template>
 
-  <script type="application/dart" src="debug_grid.dart"></script>
-
-</polymer-element>
+</dom-module>
 

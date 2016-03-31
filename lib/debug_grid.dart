@@ -1,10 +1,14 @@
-@HtmlImport('billing_page.html')
+@HtmlImport('debug_grid.html')
+library debug_grid.polymer_element;
+
 import 'dart:html';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:cookie/cookie.dart' as cookie;
+import 'package:logging/logging.dart';
+import 'dart:async';
 
 /// Displays a debug grid to verify if all elements are properly aligned.
 ///
@@ -12,7 +16,27 @@ import 'package:cookie/cookie.dart' as cookie;
 /// Toggle the number of columns with the shift key.
 @PolymerRegister('debug-grid')
 class DebugGrid extends PolymerElement {
-  DebugGrid.created() : super.created();
+  DebugGrid.created() : super.created() {
+    String setting;
+
+    setting = cookie.get('${name}-visible');
+    if (setting != null) set('visible', (setting == '1'));
+
+    setting = cookie.get('${name}-show-lines');
+    if (setting != null) set('showLines', (setting == '1'));
+
+    setting = cookie.get('${name}-show-columns');
+    if (setting != null) set('showColumns', (setting == '1'));
+
+    setting = cookie.get('${name}-columns');
+    if (setting != null) set('columns', int.parse(setting));
+
+    _isInitialized = true;
+  }
+
+  bool _isInitialized = false;
+
+  var log = new Logger('Debug Grid');
 
   /// This is used to create the names for cookies
   /// If you have multiple debug grids, you should use different
@@ -34,6 +58,14 @@ class DebugGrid extends PolymerElement {
   /// Can be toggled with [toggleKey]
   @property
   bool visible = false;
+
+  @Observe('visible')
+  visibilityChanged([_]) {
+    if (_isInitialized) {
+      log.info('${visible ? 'Showing' : 'Hiding'} [$name]');
+      _saveSetting('visible', visible ? '1' : '0');
+    }
+  }
 
   /// Whether to display debug lines
   /// Can be toggled with [linesToggleKey]
@@ -60,22 +92,54 @@ class DebugGrid extends PolymerElement {
   /// Whether the grid should get smaller if the window size gets smaller
   @property
   bool adaptive = true;
-//
-//  @ComputedProperty('100 * gutterWidth / totalWidth')
-//  @observable
-//  double get gutterWidthPercentage => readValue(#gutterWidthPercentage);
-//
-//  @ComputedProperty('((totalWidth - (gutterWidth * (columns - 1))) / columns).round()')
-//  @observable
-//  int get columnWidth => readValue(#columnWidth);
-//
-//  @ComputedProperty('100 * columnWidth / totalWidth')
-//  @observable
-//  double get columnWidthPercentage => readValue(#columnWidthPercentage);
 
   /// The number of columns to display
   @property
   int columns = 6;
+
+  /// Invoked whenever [columns] changed and makes sure that the correct amount
+  /// of columns are displayed
+  @Observe('columns')
+  columnsChanged([_]) {
+    if (_isInitialized) {
+      log.info('Setting columns to $columns [$name]');
+      _setColumnsHtml();
+      _saveSetting('columns', columns.toString());
+    }
+  }
+
+  @property
+  String containerClass = '';
+
+  @property
+  String columnsClass = 'visible';
+
+  @Observe('showColumns')
+  columnsVisibilityChanged([_]) {
+    set('columnsClass', showColumns ? 'visible' : '');
+    if (_isInitialized) {
+      log.info('${showColumns ? 'Showing' : 'Hiding'} columns [$name]');
+      _saveSetting('show-columns', showColumns ? '1' : '0');
+    }
+  }
+
+  @property
+  String linesClass = 'visible';
+
+  @Observe('showLines')
+  linesVisibilityChanged([_]) {
+    set('linesClass', showLines ? 'visible' : '');
+    if (_isInitialized) {
+      log.info('${showLines ? 'Showing' : 'Hiding'} lines [$name]');
+      _saveSetting('show-lines', showLines ? '1' : '0');
+    }
+  }
+
+  _saveSetting(String settingName, String value) {
+    if (_isInitialized) {
+      cookie.set('$name-$settingName', value);
+    }
+  }
 
   /// The cookie name
   static const String COLUMNS_NAME = 'debug-grid-columns';
@@ -96,31 +160,20 @@ class DebugGrid extends PolymerElement {
         }
       }
     });
-
-    String setting;
-
-    setting = cookie.get('${name}-visible');
-    if (setting != null) visible = (setting == '1');
-
-    setting = cookie.get('${name}-show-lines');
-    if (setting != null) showLines = (setting == '1');
-
-    setting = cookie.get('${name}-show-columns');
-    if (setting != null) showColumns = (setting == '1');
-
-    setting = cookie.get('${name}-columns');
-    if (setting != null) columns = int.parse(setting);
   }
 
-  /**
-   * Small helper function to return a [number] of `<div>`s.
-   */
-  String _getDivs(int number) {
-    var linesHtml = '';
+  /// Helper that appends [number] divs to given container.
+  _appendDivs(Element container, int number) {
+    container.setInnerHtml('');
+    PolymerDom c = Polymer.dom(container);
     for (var i = 0; i < number; i++) {
-      linesHtml += '<div></div>';
+      c.append(new DivElement());
     }
-    return linesHtml;
+  }
+
+  @Observe('visible, adaptive')
+  updateContainerClass([_, __]) {
+    set('containerClass', visible ? 'visible' : '');
   }
 
   /**
@@ -128,63 +181,70 @@ class DebugGrid extends PolymerElement {
    */
   attached() {
     var numberOfLines = 100;
-    $['lines'].setInnerHtml(_getDivs(numberOfLines));
+    _appendDivs($$('#lines'), numberOfLines);
     _setColumnsHtml();
-  }
-
-  /**
-   * Invoked whenever [columns] changed and makes sure that the correct amount
-   * of columns are displayed
-   */
-  columnsChanged() {
-    _setColumnsHtml();
-    cookie.set('${name}-columns', columns.toString());
   }
 
   /**
    * Gets invoked by [columnsChanged] and adds the actual amount of columns
    */
   _setColumnsHtml() {
-    shadowRoot.querySelector("#columns > div").setInnerHtml(_getDivs(columns));
+    var containerElement = $$('#columns > div');
+    _appendDivs(containerElement, columns);
+
+    var containerWidth = '${totalWidth + gutterWidth * 2}px';
+    if (adaptive) {
+      containerElement.style.maxWidth = containerWidth;
+    } else {
+      containerElement.style
+        ..width = 'auto'
+        ..maxWidth = containerWidth;
+    }
+
+    $$("#columns > div")
+      ..style.paddingLeft = '${gutterWidth}px'
+      ..style.paddingRight = '${gutterWidth}px';
+
+    var columnWidth = ((totalWidth - (gutterWidth * (columns - 1))) / columns).round();
+    var columnWidthPercentage = 100 * columnWidth / totalWidth;
+
+    List<DivElement> columnElements = Polymer.dom(root).querySelectorAll('#columns > div > div');
+    List<DivElement> lineElements = Polymer.dom(root).querySelectorAll('#lines > div');
+
+    columnElements.forEach((div) {
+      div.style
+        ..marginRight = '${100 * gutterWidth / totalWidth}%'
+        ..width = '${columnWidthPercentage}%';
+    });
+
+    lineElements.forEach((div) {
+      div.style
+        ..height = '${lineHeight}px'
+        ..marginTop = '${lineHeight}px';
+    });
   }
 
-  /**
-   * Sets the setting with a cookie
-   */
-  showColumnsChanged() => cookie.set('${name}-show-columns', showColumns ? '1' : '0');
-
-  /**
-   * Sets the setting with a cookie
-   */
-  visibleChanged() => cookie.set('${name}-visible', visible ? '1' : '0');
-
-  /**
-   * Sets the setting with a cookie
-   */
-  showLinesChanged() => cookie.set('${name}-show-lines', showLines ? '1' : '0');
-
   toggleVisibility() {
-    print(name);
-    visible = !visible;
+    set('visible', !visible);
   }
 
   /**
    * Toggles the [cols12] property and makes sure that the grid is visible
    */
   toggleColumnCount() {
-    if (columns != 6) columns = 6;
-    else columns = 12;
-    visible = true;
-    showColumns = true;
+    if (columns != 6) set('columns', 6);
+    else set('columns', 12);
+    set('visible', true);
+    set('showColumns', true);
   }
 
   toggleLines() {
-    showColumns = true;
-    showLines = !showLines;
+    set('showColumns', true);
+    set('showLines', !showLines);
   }
 
   toggleColumns() {
-    showLines = true;
-    showColumns = !showColumns;
+    set('showLines', true);
+    set('showColumns', !showColumns);
   }
 }

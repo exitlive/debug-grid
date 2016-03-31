@@ -7,12 +7,12 @@
       }
 
       :host {
+        pointer-events: none;
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         width: 100%;
-        pointer-events: none;
       }
 
       #container {
@@ -86,24 +86,22 @@
         text-align: inherit;
         padding-left: 0;
         padding-right: 0;
-        margin-left: 0%;
+        margin-left: 0;
         /* margin-right will be set by the component itself */
       }
 
       #columns > div > div:last-child {
-        margin-right: 0%;
-        float: right;
+        margin-right: 0 !important;
+        float: right !important;
       }
-
-
-
 
 
       /**
        * Lines
        */
       #lines {
-        display: absolute;
+        position: absolute;
+        display: block;
         top: 0;
         left: 0;
         right: 0;
@@ -117,46 +115,19 @@
         background: rgba(150, 255, 150, 0.1);
         /* height and margin are set by the component itself */
       }
+
     </style>
-    <!--<template if="{{ adaptive == true }}">-->
-      <!--<style>-->
-        <!--#columns > div {-->
-          <!--width: auto;-->
-          <!--max-width: {{ totalWidth + gutterWidth * 2 }}px;-->
-        <!--}-->
-      <!--</style>-->
-    <!--</template>-->
-    <!--<template if="{{ adaptive == false }}">-->
-      <!--<style>-->
-        <!--#columns > div {-->
-          <!--width: {{ totalWidth + gutterWidth * 2 }}px;-->
-        <!--}-->
-      <!--</style>-->
-    <!--</template>-->
 
-    <!--<style>-->
-      <!--#columns > div {-->
-        <!--padding-left: {{ gutterWidth }}px;-->
-        <!--padding-right: {{ gutterWidth }}px;-->
-      <!--}-->
-      <!--#columns > div > div {-->
-        <!--margin-right: {{ gutterWidthPercentage }}%;-->
-        <!--width: {{ columnWidthPercentage }}%;-->
-      <!--}-->
-      <!--#lines > div {-->
-        <!--height: {{ lineHeight }}px;-->
-        <!--margin-top: {{ lineHeight }}px;-->
-      <!--}-->
-    <!--</style>-->
 
-    <div id="container" class="{{ { 'visible': visible } }}">
 
-      <div id="columns" class="{{ { 'visible': showColumns } }}"><div>
+    <div id="container" class$="{{containerClass}}">
+
+      <div id="columns" class$="{{columnsClass}}"><div>
         <!-- Will get populated by the 'columnsChanged' method -->
       </div></div>
 
 
-      <div id="lines" class="{{ { 'visible': showLines } }}">
+      <div id="lines" class$="{{linesClass}}">
         <!-- Will get populated by the 'attached' method -->
       </div>
 
@@ -166,3 +137,23 @@
 
 </dom-module>
 
+<!--
+<template if="{{ adaptive == true }}">
+  <style>
+    #columns > div {
+      width: auto;
+    max-width: {{ totalWidth + gutterWidth * 2 }}px;
+    }
+  </style>
+</template>
+<template if="{{ adaptive == false }}">
+  <style>
+    #columns > div {
+    width: {{ totalWidth + gutterWidth * 2 }}px;
+    }
+  </style>
+</template>
+
+<style>
+</style>
+-->

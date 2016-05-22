@@ -8,7 +8,6 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:cookie/cookie.dart' as cookie;
 import 'package:logging/logging.dart';
-import 'dart:async';
 
 /// Displays a debug grid to verify if all elements are properly aligned.
 ///
@@ -79,15 +78,19 @@ class DebugGrid extends PolymerElement {
 
   /// The total width in pixels (without gutters on the outside)
   @property
-  int totalWidth = 1128;
+  num totalWidth = 70.5;
 
   /// The gutter width in pixels
   @property
-  int gutterWidth = 24;
+  num gutterWidth = 1.5;
 
   /// The line height in pixels
   @property
-  int lineHeight = 24;
+  num lineHeight = 1.5;
+
+  /// The units used for all measurements (totalWidth, gutterWidth, etc...)
+  @property
+  String units = 'rem';
 
   /// Whether the grid should get smaller if the window size gets smaller
   @property
@@ -151,12 +154,16 @@ class DebugGrid extends PolymerElement {
     window.onKeyDown.listen((KeyboardEvent e) {
       if (e.target is! InputElement && e.target is! TextAreaElement) {
         if (e.keyCode == toggleKey) {
-          if (e.shiftKey) toggleColumnCount();
-          else toggleVisibility();
+          if (e.shiftKey)
+            toggleColumnCount();
+          else
+            toggleVisibility();
         }
         if (e.keyCode == linesToggleKey) {
-          if (e.shiftKey) toggleColumns();
-          else toggleLines();
+          if (e.shiftKey)
+            toggleColumns();
+          else
+            toggleLines();
         }
       }
     });
@@ -192,7 +199,7 @@ class DebugGrid extends PolymerElement {
     var containerElement = $$('#columns > div');
     _appendDivs(containerElement, columns);
 
-    var containerWidth = '${totalWidth + gutterWidth * 2}px';
+    var containerWidth = '${totalWidth + gutterWidth * 2}$units';
     if (adaptive) {
       containerElement.style.maxWidth = containerWidth;
     } else {
@@ -202,10 +209,10 @@ class DebugGrid extends PolymerElement {
     }
 
     $$("#columns > div")
-      ..style.paddingLeft = '${gutterWidth}px'
-      ..style.paddingRight = '${gutterWidth}px';
+      ..style.paddingLeft = '${gutterWidth}$units'
+      ..style.paddingRight = '${gutterWidth}$units';
 
-    var columnWidth = ((totalWidth - (gutterWidth * (columns - 1))) / columns).round();
+    var columnWidth = ((totalWidth - (gutterWidth * (columns - 1))) / columns);
     var columnWidthPercentage = 100 * columnWidth / totalWidth;
 
     List<DivElement> columnElements = Polymer.dom(root).querySelectorAll('#columns > div > div');
@@ -219,8 +226,8 @@ class DebugGrid extends PolymerElement {
 
     lineElements.forEach((div) {
       div.style
-        ..height = '${lineHeight}px'
-        ..marginTop = '${lineHeight}px';
+        ..height = '${lineHeight}$units'
+        ..marginTop = '${lineHeight}$units';
     });
   }
 
@@ -232,8 +239,10 @@ class DebugGrid extends PolymerElement {
    * Toggles the [cols12] property and makes sure that the grid is visible
    */
   toggleColumnCount() {
-    if (columns != 6) set('columns', 6);
-    else set('columns', 12);
+    if (columns != 6)
+      set('columns', 6);
+    else
+      set('columns', 12);
     set('visible', true);
     set('showColumns', true);
   }
